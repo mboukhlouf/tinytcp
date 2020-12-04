@@ -7,6 +7,7 @@ from tinytcp import TcpClient
 from tinytcp import TcpServer
 
 def main():
+    global server
     if len(sys.argv) < 2:
         print("Usage: ", sys.argv[0], " <port>")
         return
@@ -36,9 +37,11 @@ def handle_client_connect(client: TcpClient):
     print(f"{client_address} connected.")
 
 
-def handle_message_received(client: TcpClient, msg: str):
+def handle_message_received(client: TcpClient, msg: bytes):
+    msg_str = msg.decode()
     client_address = client.socket.getpeername()
-    print(f"{client_address}: {msg}")
+    print(f"{client_address}: {msg_str}")
+    broadcast(server, msg_str)
 
 
 def handle_shutdown(client: TcpClient):
@@ -46,5 +49,17 @@ def handle_shutdown(client: TcpClient):
     print(f"{client_address} disconnected.")
 
 
+def broadcast(server: TcpServer, msg: str) -> None:
+    msg_bytes = msg.encode()
+    for client in server.clients:
+        client.send(msg_bytes)
+
+
 if __name__ == "__main__":
     main()
+
+def str_to_bytes(text: str):
+    return text.encode()
+
+def bytes_to_str(msg_bytes: bytes):
+    return msg_bytes.decode(encoding="utf8")

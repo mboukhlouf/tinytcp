@@ -1,6 +1,6 @@
 import socket
 import threading
-
+from typing import List
 from . import TcpClient
 
 
@@ -27,7 +27,7 @@ class TcpServer:
         return self._socket
 
     @property
-    def clients(self):
+    def clients(self) -> List[TcpClient]:
         return self._clients
 
     @property

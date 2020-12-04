@@ -37,9 +37,7 @@ def main():
 
 
 def handle_message(msg : bytes):
-    with open("received_image.jpg", "wb") as f:
-        f.write(msg)
-    print("file received and written")
+    print(msg.decode())
 
 
 def server_shutdown():
